@@ -1,0 +1,13 @@
+{
+  "name": "sena-cloud-function",
+  "version": "1.0.0",
+  "description": "Dependencies for Netlify serverless function",
+  "dependencies": {
+    "@google/generative-ai": "^0.10.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

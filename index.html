@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENA Cloud Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Fuente personalizada para una apariencia limpia */
+        body {
+            font-family: "Inter", sans-serif;
+        }
+        /* Estilos personalizados para imágenes de fondo y superposiciones si es necesario */
+        .hero-background {
+            /* IMAGEN DE FONDO: Asegúrate de que 'fondo.jpg' esté en la misma carpeta que tu archivo HTML */
+            background-image: url('fondo.jpg'); /* Referencia a tu imagen local */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        /* Superposición azul para mejorar la legibilidad del texto y dar un tono */
+        .hero-background::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 150, 0.6); /* Azul oscuro con 60% de opacidad */
+            z-index: 1; /* Asegura que la superposición esté detrás del contenido pero sobre la imagen */
+        }
+        /* Estilo para el contenido expandible */
+        .expandable-content {
+            max-height: 0; /* Oculto por defecto con altura máxima de 0 */
+            overflow: hidden; /* Oculta el contenido que se desborda */
+            transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out, padding-top 0.5s ease-in-out, border-top 0.5s ease-in-out; /* Transición suave para la expansión */
+            margin-top: 0; /* Sin margen superior inicialmente */
+            padding-top: 0; /* Sin padding superior inicialmente */
+            border-top: none; /* Sin borde superior inicialmente */
+            font-size: 0.875rem; /* Texto más pequeño para detalles */
+            color: #4a5568; /* Color de texto más oscuro */
+        }
+        .expandable-content.active {
+            max-height: 500px; /* Suficientemente grande para mostrar todo el contenido */
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        /* Estilos para las tarjetas de servicio */
+        .service-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            transition: box-shadow 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden; /* Keep overflow hidden to hide initial content */
+            padding-bottom: 1rem; /* Adjusted padding-bottom for consistent spacing */
+        }
+        .service-card .flex-grow {
+            flex-grow: 1;
+        }
+        .service-card .details-link-container {
+            margin-top: auto; /* Empuja el enlace "Más detalles" hacia abajo */
+            padding-top: 1rem; /* Espacio entre el contenido y el enlace */
+            text-align: center; /* Centra el texto del enlace */
+            position: relative;
+            background-color: transparent;
+            z-index: auto;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        /* New style for the general expandable section */
+        .general-expandable-section {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            text-align: left;
+            margin-top: 2rem; /* Space from the button above */
+        }
+        /* Chatbot specific styles */
+        .chatbot-container {
+            display: flex;
+            flex-direction: column;
+            height: 400px; /* Fixed height for chat window */
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            position: relative; /* Needed for absolute positioning of close button */
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background-color: #f9fafb;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            background-color: #ffffff;
+        }
+        .chat-input {
+            flex-grow: 1;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+        }
+        .chat-button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .chat-button:hover {
+            background-color: #2563eb;
+        }
+        .message-user {
+            background-color: #e0f2fe;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.5rem;
+            align-self: flex-end;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .message-bot {
+            background-color: #e2e8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.5rem;
+            align-self: flex-start;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .loading-indicator {
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 3px solid rgba(0,0,0,.1);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+            -webkit-animation: spin 1s ease-in-out infinite;
+            margin-left: 0.5rem;
+        }
+        @keyframes spin {
+            to { -webkit-transform: rotate(360deg); }
+        }
+        @-webkit-keyframes spin {
+            to { -webkit-transform: rotate(360deg); }
+        }
+        /* Estilos para el botón de cerrar del chatbot */
+        .close-chatbot-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6b7280; /* Gray-500 */
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            line-height: 1; /* Para centrar la X */
+        }
+        .close-chatbot-button:hover {
+            background-color: #e5e7eb; /* Gray-100 */
+            color: #1f2937; /* Gray-900 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center fixed w-full z-10">
+        <div class="flex items-center">
+            <img src="logo.jpg" alt="Logo SENA Cloud" class="h-10 w-auto mr-3"> <span class="text-xl font-bold text-blue-700">SENA Cloud Services</span>
+        </div>
+        <div class="hidden md:flex space-x-6">
+            <a href="javascript:void(0)" onclick="scrollToSection('servicios-section')" class="text-gray-600 hover:text-blue-700 font-medium">Servicios</a>
+            <a href="javascript:void(0)" onclick="scrollToSection('acerca-de-content')" class="text-gray-600 hover:text-blue-700 font-medium">Acerca de</a>
+            <a href="javascript:void(0)" onclick="scrollToSection('blog-content')" class="text-gray-600 hover:text-blue-700 font-medium">Blog</a>
+            <a href="javascript:void(0)" onclick="scrollToSection('soporte-section')" class="text-gray-600 hover:text-blue-700 font-medium">Soporte</a>
+        </div>
+        <a href="javascript:void(0)" id="nav-agenda-button" onclick="scrollToForm()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+            Agendar Cita
+        </a>
+    </nav>
+
+    <section class="hero-background text-white py-24 md:py-32 flex items-center justify-center text-center min-h-screen relative pt-20">
+        <div class="relative z-10 p-4 max-w-6xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+                SENA CLOUD SERVICES <br class="hidden md:block"> Transforme su Infraestructura con Soluciones en la Nube
+            </h1>
+            <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">
+                Ofrecemos servicios completos en la nube: almacenamiento seguro, unidades organizativas con Windows Server 2022, correo electrónico empresarial y telefonía IP avanzada.
+                Todo lo que necesita para modernizar su empresa.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
+                <a href="javascript:void(0)" onclick="scrollToForm()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    Agendar Cita Gratuita &rarr;
+                </a>
+                <a href="javascript:void(0)" onclick="scrollToSection('servicios-section')" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    Ver Servicios
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                <div class="bg-white bg-opacity-20 backdrop-blur-sm p-6 rounded-xl shadow-lg">
+                    <h4 class="text-xl font-semibold mb-2">Sistema Optimizado</h4>
+                    <p class="text-3xl font-bold">95% Velocidad</p>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-blur-sm p-6 rounded-xl shadow-lg">
+                    <h4 class="text-xl font-semibold mb-2">Seguridad</h4>
+                    <p class="text-3xl font-bold">100%</p>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-blur-sm p-6 rounded-xl shadow-lg">
+                    <h4 class="text-xl font-semibold mb-2">Servicios Activos</h4>
+                    <p class="text-3xl font-bold">99.9% Uptime</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="servicios-section" class="py-16 bg-gray-100">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Soluciones Completas en la Nube</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
+                Desde almacenamiento seguro hasta telefonía IP avanzada, ofrecemos todas las herramientas que su empresa necesita para operar en la era digital.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 service-card">
+                    <div class="flex-grow">
+                        <div class="text-blue-600 text-5xl mb-4">
+                            <svg class="w-12 h-12 mx-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 10a.5.5 0 01.5-.5h8a.5.5 0 010 1H6a.5.5 0 01-.5-.5zM6 14a.5.5 0 01.5-.5h8a.5.5 0 010 1H6a.5.5 0 01-.5-.5zM5.5 6a.5.5 0 01.5-.5h8a.5.5 0 010 1H6a.5.5 0 01-.5-.5z"></path><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0 2a10 10 0 100-20 10 10 0 000 20z" clip-rule="evenodd"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Almacenamiento en la Nube</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Almacenamiento seguro y escalable con acceso desde cualquier lugar.
+                        </p>
+                        <ul class="text-left text-gray-700 text-sm space-y-2">
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Backup automático y sincronización en tiempo real</li>
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Acceso multiplataforma</li>
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Seguridad avanzada</li>
+                        </ul>
+                    </div>
+                    <div id="almacenamiento-details" class="expandable-content">
+                        <p>Nuestro servicio de almacenamiento en la nube ofrece soluciones robustas para todas sus necesidades de datos.
+                            Con cifrado de extremo a extremo y replicación de datos, sus archivos están siempre seguros y accesibles.
+                            Ideal para empresas de todos los tamaños que buscan eficiencia y tranquilidad.</p>
+                    </div>
+                    <div class="details-link-container">
+                        <a href="javascript:void(0)" onclick="toggleSection('almacenamiento-details', this)" class="text-blue-600 hover:text-blue-800 font-semibold text-sm mt-4 inline-block">Más detalles &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 service-card">
+                    <div class="flex-grow">
+                        <div class="text-blue-600 text-5xl mb-4">
+                            <svg class="w-12 h-12 mx-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM13 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Windows Server 2022</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Unidades organizativas completamente gestionadas con la última versión de Windows Server para máximo rendimiento.
+                        </p>
+                        <ul class="text-left text-gray-700 text-sm space-y-2">
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Dominio personalizado</li>
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Sesión centralizada</li>
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Actualizaciones automáticas</li>
+                        </ul>
+                    </div>
+                    <div id="windows-server-details" class="expandable-content">
+                        <p>Con Windows Server 2022 en la nube, obtiene un entorno de servidor robusto y seguro.
+                            Gestionamos las unidades organizativas para usted, asegurando un rendimiento óptimo y la compatibilidad con sus aplicaciones empresariales.
+                            Ideal para una infraestructura IT moderna y eficiente.</p>
+                    </div>
+                    <div class="details-link-container">
+                        <a href="javascript:void(0)" onclick="toggleSection('windows-server-details', this)" class="text-blue-600 hover:text-blue-800 font-semibold text-sm mt-4 inline-block">Más detalles &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 service-card">
+                    <div class="flex-grow">
+                        <div class="text-blue-600 text-5xl mb-4">
+                            <svg class="w-12 h-12 mx-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Correo Electrónico</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Servicio de correo empresarial profesional con su dominio personalizado y máxima seguridad anti-spam.
+                        </p>
+                        <ul class="text-left text-gray-700 text-sm space-y-2">
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Dominio personalizado</li>
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Protección anti-spam</li>
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Acceso móvil</li>
+                        </ul>
+                    </div>
+                    <div id="correo-details" class="expandable-content">
+                        <p>Nuestra solución de correo electrónico empresarial ofrece una comunicación fluida y segura.
+                            Disfrute de su dominio personalizado, protección avanzada contra spam y acceso en todos sus dispositivos.
+                            Ideal para mantener a su equipo conectado y productivo.</p>
+                    </div>
+                    <div class="details-link-container">
+                        <a href="javascript:void(0)" onclick="toggleSection('correo-details', this)" class="text-blue-600 hover:text-blue-800 font-semibold text-sm mt-4 inline-block">Más detalles &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 service-card">
+                    <div class="flex-grow">
+                        <div class="text-blue-600 text-5xl mb-4">
+                            <svg class="w-12 h-12 mx-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.774a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Telefonía IP</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Sistema de telefonía avanzado que reduce costos y mejora la comunicación empresarial.
+                        </p>
+                        <ul class="text-left text-gray-700 text-sm space-y-2">
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Llamadas ilimitadas a destinos nacionales</li>
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Funciones de centralita avanzada</li>
+                            <li class="flex items-center"><svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Integración con sistemas existentes</li>
+                        </ul>
+                    </div>
+                    <div id="telefonia-ip-details" class="expandable-content">
+                        <p>Nuestra solución de telefonía IP le permite unificar sus comunicaciones.
+                            Disfrute de funciones avanzadas como llamadas en espera, desvío de llamadas, colas de atención, conferencias y buzón de voz.
+                            Optimice la comunicación interna y externa de su empresa con una tecnología de vanguardia.</p>
+                    </div>
+                    <div class="details-link-container">
+                        <a href="javascript:void(0)" onclick="toggleSection('telefonia-ip-details', this)" class="text-blue-600 hover:text-blue-800 font-semibold text-sm mt-4 inline-block">Más detalles &rarr;</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <a href="javascript:void(0)" id="solicitar-info-button" onclick="toggleSection('info-detallada-content', this)" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    Solicitar Información Detallada &rarr;
+                </a>
+                <div id="info-detallada-content" class="expandable-content general-expandable-section">
+                    <h4 class="text-xl font-semibold text-gray-800 mb-3">Información Detallada de Contacto</h4>
+                    <p class="text-gray-700 mb-2">
+                        Para obtener una consulta personalizada y más detalles sobre cómo SENA Cloud Services puede transformar su negocio, por favor contáctenos a través de los siguientes medios:
+                    </p>
+                    <ul class="text-left text-gray-700 text-sm space-y-2">
+                        <li class="flex items-center"><svg class="w-4 h-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg> Email: info@proyecto.com</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.774a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg> Teléfono: +57 320 869 1334</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg> Dirección: Calle 10 # 5-63, Tunja, Boyacá</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Contenido para "Acerca de" -->
+    <section id="acerca-de-content" class="py-16 bg-white expandable-content general-expandable-section">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Acerca de SENA Cloud Services</h2>
+            <p class="text-lg text-gray-600 mb-8">
+                SENA Cloud Services es una iniciativa dedicada a proporcionar soluciones de infraestructura en la nube de vanguardia para empresas de todos los tamaños.
+                Nuestro objetivo es empoderar a su negocio con tecnología escalable, segura y eficiente, permitiéndole centrarse en lo que mejor sabe hacer.
+                Contamos con un equipo de expertos comprometidos con la innovación y la excelencia en el servicio, asegurando que su transición a la nube sea fluida y exitosa.
+                Desde nuestra fundación, hemos ayudado a numerosas organizaciones a optimizar sus operaciones, reducir costos y mejorar la seguridad de sus datos.
+                Nos enorgullece ser un socio tecnológico confiable, ofreciendo soporte continuo y adaptándonos a las necesidades cambiantes del mercado.
+            </p>
+            <p class="text-lg text-gray-600">
+                Nuestra visión es ser el proveedor líder de servicios en la nube, impulsando la transformación digital y el crecimiento sostenible de nuestros clientes.
+                Trabajamos con las últimas tecnologías y metodologías para garantizar la máxima calidad y fiabilidad en cada uno de nuestros servicios.
+            </p>
+        </div>
+    </section>
+
+    <!-- Sección de Contenido para "Blog" -->
+    <section id="blog-content" class="py-16 bg-gray-100 expandable-content general-expandable-section">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Últimas Publicaciones de Nuestro Blog</h2>
+            <p class="text-lg text-gray-600 mb-8">
+                Manténgase informado con nuestros artículos más recientes sobre tendencias tecnológicas, consejos y noticias del sector cloud.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">La Revolución de la IA en la Nube</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Exploramos cómo la inteligencia artificial está transformando los servicios en la nube y sus aplicaciones prácticas.
+                    </p>
+                    <a href="#" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">Leer más &rarr;</a>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">5 Estrategias para Optimizar Costos en la Nube</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Descubra cómo puede maximizar su inversión en la nube con estas estrategias inteligentes.
+                    </p>
+                    <a href="#" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">Leer más &rarr;</a>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">El Futuro de la Ciberseguridad en Entornos Cloud</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Analizamos las amenazas emergentes y las mejores prácticas para proteger sus datos en la nube.
+                    </p>
+                    <a href="#" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">Leer más &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="soporte-section" class="py-16 bg-gray-100">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Soporte Técnico</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
+                Nuestro equipo de soporte está listo para ayudarle con cualquier consulta o problema.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Preguntas Frecuentes</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Encuentre respuestas a las preguntas más comunes sobre nuestros servicios.
+                    </p>
+                    <a href="javascript:void(0)" onclick="toggleSection('faq-list', this)" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">Ver FAQ &rarr;</a>
+                    <div id="faq-list" class="expandable-content mt-4 text-left">
+                        <h4 class="text-lg font-semibold mb-2">Preguntas Comunes:</h4>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                            <li><strong>¿Qué es el almacenamiento en la nube?</strong> Es un servicio que le permite guardar sus archivos de forma segura en servidores remotos, accesibles desde cualquier lugar con conexión a internet.</li>
+                            <li><strong>¿Cómo funciona la telefonía IP?</strong> Utiliza su conexión a internet para realizar y recibir llamadas, ofreciendo funciones avanzadas y reduciendo costos.</li>
+                            <li><strong>¿Es seguro Windows Server 2022 en la nube?</strong> Sí, implementamos las últimas medidas de seguridad y actualizaciones automáticas para proteger su entorno.</li>
+                            <li><strong>¿Puedo usar mi propio dominio con el correo electrónico empresarial?</strong> Absolutamente, configuramos su correo para que funcione con su dominio personalizado.</li>
+                            <li><strong>¿Qué tipo de soporte técnico ofrecen?</strong> Ofrecemos soporte 24/7 a través de chat, correo electrónico y teléfono para resolver cualquier incidencia.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Contactar a Soporte</h3>
+                    <p class="text-gray-600 text-sm mb-4">
+                        Si no encuentra lo que necesita, contáctenos directamente.
+                    </p>
+                    <a href="javascript:void(0)" onclick="toggleSection('contact-list', this)" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">Ver Contactos &rarr;</a>
+                     <div id="contact-list" class="expandable-content mt-4 text-left">
+                        <h4 class="text-lg font-semibold mb-2">Nuestro Equipo de Soporte:</h4>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                            <li>Alex: 12345</li>
+                            <li>Juan: 12346</li>
+                            <li>Esteban: 12347</li>
+                            <li>Samuel: 12348</li>
+                            <li>Danilo: 1349</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+             <div class="mt-8">
+                <a href="javascript:void(0)" onclick="toggleSection('chatbot-section', this)" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    Abrir Chatbot &rarr;
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nueva Sección para Agendar Cita -->
+    <section id="agendar-cita-section" class="py-16 bg-gray-100 expandable-content general-expandable-section">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Agendar Cita</h2>
+            <p class="text-lg text-gray-600 mb-8">
+                Complete el siguiente formulario para agendar una cita con nuestro equipo.
+            </p>
+            <form class="bg-white p-8 rounded-xl shadow-lg text-left">
+                <div class="mb-4">
+                    <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo:</label>
+                    <input type="text" id="nombre" name="nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Su nombre">
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico:</label>
+                    <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="su.email@ejemplo.com">
+                </div>
+                <div class="mb-4">
+                    <label for="telefono" class="block text-gray-700 text-sm font-bold mb-2">Teléfono:</label>
+                    <input type="tel" id="telefono" name="telefono" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="+57 3XX XXX XXXX">
+                </div>
+                <div class="mb-6">
+                    <label for="mensaje" class="block text-gray-700 text-sm font-bold mb-2">Mensaje / Motivo de la Cita:</label>
+                    <textarea id="mensaje" name="mensaje" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Describa brevemente el motivo de su cita..."></textarea>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out">
+                        Enviar Solicitud
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section id="chatbot-section" class="expandable-content fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center p-4 z-50">
+        <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md chatbot-container">
+            <button class="close-chatbot-button" onclick="toggleSection('chatbot-section', this)">&times;</button>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?</h3>
+            <div class="chat-messages" id="chat-messages">
+                </div>
+            <div class="chat-input-area">
+                <input type="text" id="user-input" class="chat-input" placeholder="Escribe tu mensaje...">
+                <button id="send-button" class="chat-button">Enviar</button>
+                <div class="loading-indicator hidden" id="loading-indicator"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-6xl mx-auto px-4 text-center text-sm">
+            <p>&copy; 2024 SENA Cloud Services. Todos los derechos reservados.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="hover:text-blue-400">Política de Privacidad</a>
+                <a href="#" class="hover:text-blue-400">Términos de Servicio</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        // La URL de tu función sin servidor (backend) de Netlify.
+        // Netlify automáticamente crea esta URL para tus funciones.
+        const SERVERLESS_FUNCTION_URL = '/.netlify/functions/gemini-chat';
+
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const navAgendaButton = document.getElementById('nav-agenda-button');
+
+        const botPrefix = "SENA Cloud Assistant: ";
+        displayMessage(botPrefix + "Hola! ¿En qué puedo ayudarte con SENA Cloud Services?", 'bot');
+
+        // Función principal para alternar la visibilidad de secciones y manejar el estado de los botones
+        window.toggleSection = function(id, triggerElement) {
+            const targetContent = document.getElementById(id);
+            if (!targetContent) return;
+
+            const isActive = targetContent.classList.contains('active');
+
+            // Cierra todas las secciones expandibles activas, excepto la que se está abriendo/cerrando
+            document.querySelectorAll('.expandable-content.active').forEach(openContent => {
+                if (openContent.id !== id) { // Asegura que no se cierre la sección actual si ya está activa
+                    openContent.classList.remove('active');
+
+                    // Restablece el texto de los enlaces de "Más detalles" a "Leer menos"
+                    const serviceCardLink = openContent.closest('.service-card')?.querySelector('.details-link-container a');
+                    if (serviceCardLink && serviceCardLink.textContent === 'Leer menos →') {
+                        serviceCardLink.textContent = 'Más detalles →';
+                    }
+
+                    // Restablece el botón de navegación "Agendar Cita" si el formulario se cierra
+                    if (openContent.id === 'agendar-cita-section') {
+                        resetNavAgendaButton();
+                    }
+
+                    // Limpia el historial del chatbot si se cierra el chatbot
+                    if (openContent.id === 'chatbot-section') {
+                        chatMessages.innerHTML = '';
+                        chatMessages.scrollTop = 0;
+                        chatHistory = [];
+                        displayMessage(botPrefix + "Hola! ¿En qué puedo ayudarte con SENA Cloud Services?", 'bot');
+                    }
+                     // Restablece los enlaces de FAQ y Contactos si se cierran
+                    const faqLink = document.querySelector('#soporte-section a[onclick*="faq-list"]');
+                    if (faqLink && faqLink.textContent === 'Leer menos →') {
+                        faqLink.textContent = 'Ver FAQ →';
+                    }
+                    const contactLink = document.querySelector('#soporte-section a[onclick*="contact-list"]');
+                    if (contactLink && contactLink.textContent === 'Leer menos →') {
+                        contactLink.textContent = 'Ver Contactos →';
+                    }
+                }
+            });
+
+            if (isActive) {
+                // Si la sección estaba activa, la desactiva
+                targetContent.classList.remove('active');
+                // Restablece el texto del elemento disparador si es un enlace de "Leer menos"
+                if (triggerElement && triggerElement.textContent === 'Leer menos →') {
+                    triggerElement.textContent = 'Más detalles →';
+                }
+                // Restablece el botón de navegación si el formulario de cita se cierra directamente
+                if (id === 'agendar-cita-section') {
+                    resetNavAgendaButton();
+                }
+                 // Restablece los enlaces de FAQ y Contactos si se cierran
+                if (id === 'faq-list' && triggerElement && triggerElement.textContent === 'Leer menos →') {
+                    triggerElement.textContent = 'Ver FAQ →';
+                }
+                if (id === 'contact-list' && triggerElement && triggerElement.textContent === 'Leer menos →') {
+                    triggerElement.textContent = 'Ver Contactos →';
+                }
+            } else {
+                // Si la sección no estaba activa, la activa
+                targetContent.classList.add('active');
+                // Cambia el texto del elemento disparador si es un enlace de "Más detalles"
+                if (triggerElement && triggerElement.textContent === 'Más detalles →') {
+                    triggerElement.textContent = 'Leer menos →';
+                }
+                // Maneja el botón de navegación para la sección de agendar cita
+                if (id === 'agendar-cita-section') {
+                    navAgendaButton.textContent = 'Cerrar Formulario';
+                    navAgendaButton.onclick = closeForm;
+                }
+                 // Cambia el texto de los enlaces de FAQ y Contactos
+                if (id === 'faq-list' && triggerElement && triggerElement.textContent === 'Ver FAQ →') {
+                    triggerElement.textContent = 'Leer menos →';
+                }
+                if (id === 'contact-list' && triggerElement && triggerElement.textContent === 'Ver Contactos →') {
+                    triggerElement.textContent = 'Leer menos →';
+                }
+
+                // Desplaza la vista a la sección recién abierta, excepto si es el chatbot (que es fijo)
+                if (id !== 'chatbot-section') {
+                    targetContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        };
+
+        // Función para desplazarse a una sección general (usada por la barra de navegación)
+        window.scrollToSection = function(id) {
+            const section = document.getElementById(id);
+            if (section) {
+                // Cierra todas las secciones expandibles antes de desplazarse
+                document.querySelectorAll('.expandable-content.active').forEach(openContent => {
+                    openContent.classList.remove('active');
+                    // Reset text for service card links
+                    const serviceCardLink = openContent.closest('.service-card')?.querySelector('.details-link-container a');
+                    if (serviceCardLink && serviceCardLink.textContent === 'Leer menos →') {
+                        serviceCardLink.textContent = 'Más detalles →';
+                    }
+                    // Reset nav agenda button if agendar-cita-section is closed
+                    if (openContent.id === 'agendar-cita-section') {
+                        resetNavAgendaButton();
+                    }
+                    // Clear chatbot messages if chatbot is closed
+                    if (openContent.id === 'chatbot-section') {
+                        chatMessages.innerHTML = '';
+                        chatMessages.scrollTop = 0;
+                        chatHistory = [];
+                        displayMessage(botPrefix + "Hola! ¿En qué puedo ayudarte con SENA Cloud Services?", 'bot');
+                    }
+                     // Reset FAQ and Contact links if closed
+                    const faqLink = document.querySelector('#soporte-section a[onclick*="faq-list"]');
+                    if (faqLink && faqLink.textContent === 'Leer menos →') {
+                        faqLink.textContent = 'Ver FAQ →';
+                    }
+                    const contactLink = document.querySelector('#soporte-section a[onclick*="contact-list"]');
+                    if (contactLink && contactLink.textContent === 'Leer menos →') {
+                        contactLink.textContent = 'Ver Contactos →';
+                    }
+                });
+                // Desplaza a la sección deseada
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+
+        // Función para desplazarse al formulario de agendar cita
+        window.scrollToForm = function() {
+            toggleSection('agendar-cita-section', navAgendaButton);
+        };
+
+        // Función para cerrar el formulario de agendar cita
+        window.closeForm = function() {
+            toggleSection('agendar-cita-section', navAgendaButton);
+        };
+
+        // Función auxiliar para restablecer el botón de navegación "Agendar Cita"
+        function resetNavAgendaButton() {
+            navAgendaButton.textContent = 'Agendar Cita';
+            navAgendaButton.onclick = scrollToForm;
+        }
+
+        function displayMessage(message, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender === 'user' ? 'message-user' : 'message-bot');
+            messageElement.textContent = message;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+        }
+
+        let chatHistory = []; // Initialize empty chat history
+
+        async function sendMessage() {
+            const userMessage = userInput.value.trim();
+            if (userMessage === "") return;
+
+            displayMessage(userMessage, 'user');
+            userInput.value = '';
+            loadingIndicator.classList.remove('hidden');
+
+            // Add user message to history
+            chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+
+            try {
+                // Envía el historial del chat a tu función sin servidor de Netlify
+                const response = await fetch(SERVERLESS_FUNCTION_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chatHistory: chatHistory }) // Envía el historial completo
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const botResponse = result.text; // Asume que tu función sin servidor devuelve un objeto con una propiedad 'text'
+
+                if (botResponse) {
+                    displayMessage(botPrefix + botResponse, 'bot');
+                    chatHistory.push({ role: "model", parts: [{ text: botResponse }] });
+                } else {
+                    const errorMessage = botPrefix + "Lo siento, no pude obtener una respuesta. Por favor, intenta de nuevo.";
+                    displayMessage(errorMessage, 'bot');
+                    chatHistory.push({ role: "model", parts: [{ text: errorMessage.replace(botPrefix, '') }] });
+                }
+            } catch (error) {
+                console.error("Error al comunicarse con la función sin servidor:", error);
+                const errorMessage = botPrefix + "Hubo un error al procesar tu solicitud. Intenta más tarde. Error: " + error.message;
+                displayMessage(errorMessage, 'bot');
+                chatHistory.push({ role: "model", parts: [{ text: errorMessage.replace(botPrefix, '') }] });
+            } finally {
+                loadingIndicator.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('user-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+
+</body>
+</html>
