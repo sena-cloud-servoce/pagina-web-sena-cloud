@@ -1,9 +1,8 @@
 [build]
-  # Comando de construcción para instalar dependencias de Node.js
-  command = "npm install"
-  # Directorio de publicación de tu sitio web (donde está index.html)
   publish = "."
+  functions = "netlify/functions"
 
-[functions]
-  # Directorio donde se encuentran tus funciones de Netlify
-  directory = "netlify/functions"
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
