@@ -1,15 +1,21 @@
 {
   "name": "pagina-web",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Sitio web de SENA CLOUD SERVICES con chatbot integrado",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "netlify dev"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "netlify",
+    "serverless",
+    "chatbot",
+    "gemini",
+    "web"
+  ],
+  "author": "Tu Nombre",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "@google/generative-ai": "^0.24.1"
+    "node-fetch": "^2.6.1"
   }
 }

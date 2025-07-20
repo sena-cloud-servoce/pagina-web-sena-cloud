@@ -1,74 +1,97 @@
-    // netlify/functions/gemini-chat.js
+// Importa las dependencias necesarias.
+// Asegúrate de instalar 'node-fetch' si tu entorno Node.js no lo soporta nativamente (para versiones antiguas).
+// En Netlify Functions, 'fetch' suele estar disponible.
 
-    // Import the Google Generative AI library.
-    // This library needs to be installed as a dependency (see step 3 below).
-    const { GoogleGenerativeAI } = require('@google/generative-ai');
+// La clave de API de Gemini NO DEBE estar hardcodeada aquí.
+// Debe ser gestionada como una variable de entorno en Netlify.
+// Por ejemplo, puedes configurarla en las "Environment variables" de tu sitio en Netlify.
+// Netlify las inyectará en process.env.
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // ¡Importante! Configura esta variable en Netlify
 
-    // The main handler function for your Netlify Serverless Function.
-    // It receives the event (HTTP request details) and context (Netlify environment info).
-    exports.handler = async function(event, context) {
-        // 1. Enforce POST method: Ensure only POST requests are processed.
-        if (event.httpMethod !== 'POST') {
+// Esta es la función principal que Netlify Functions ejecutará.
+exports.handler = async (event, context) => {
+    // Solo procesa solicitudes POST
+    if (event.httpMethod !== 'POST') {
+        return {
+            statusCode: 405,
+            body: 'Method Not Allowed',
+        };
+    }
+
+    try {
+        // Parsea el cuerpo de la solicitud JSON para obtener el prompt del usuario.
+        // Se espera un 'chatHistory' opcional para mantener el contexto.
+        const { prompt, chatHistory = [] } = JSON.parse(event.body);
+
+        if (!prompt) {
             return {
-                statusCode: 405, // Method Not Allowed
-                body: JSON.stringify({ error: 'Method Not Allowed' })
+                statusCode: 400,
+                body: JSON.stringify({ error: 'Missing prompt in request body' }),
             };
         }
 
-        // 2. Retrieve API Key: Get the Google Gemini API key from Netlify's environment variables.
-        // This variable MUST be set in your Netlify site settings for security.
-        const API_KEY = process.env.GEMINI_API_KEY;
+        // Prepara el historial de chat para enviarlo a la API de Gemini.
+        // La API de Gemini espera un formato específico para el historial de chat:
+        // [{ role: "user", parts: [{ text: "..." }] }, { role: "model", parts: [{ text: "..." }] }]
+        const contents = [
+            ...chatHistory.map(msg => ({ role: msg.role, parts: [{ text: msg.text }] })),
+            { role: "user", parts: [{ text: prompt }] }
+        ];
 
-        if (!API_KEY) {
-            console.error("GEMINI_API_KEY environment variable is not set.");
+        // Configura el payload para la API de Gemini.
+        const payload = {
+            contents: contents,
+            generationConfig: {
+                // Puedes ajustar estos parámetros para controlar la respuesta del modelo.
+                temperature: 0.7, // Controla la aleatoriedad de la respuesta (0.0 a 1.0)
+                maxOutputTokens: 200, // Limita la longitud de la respuesta
+            },
+        };
+
+        // URL de la API de Gemini (usando gemini-2.0-flash como ejemplo)
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+        // Realiza la solicitud a la API de Gemini.
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        // Verifica si la solicitud a Gemini fue exitosa.
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error from Gemini API:", errorData);
             return {
-                statusCode: 500, // Internal Server Error
-                body: JSON.stringify({ error: 'Server configuration error: API Key missing.' })
+                statusCode: response.status,
+                body: JSON.stringify({ error: 'Error calling Gemini API', details: errorData }),
             };
         }
 
-        try {
-            // 3. Parse Request Body: Extract the chat history sent from your frontend.
-            const { chatHistory } = JSON.parse(event.body);
+        const result = await response.json();
 
-            // 4. Initialize Gemini AI: Create a new instance of the Google Generative AI client.
-            const genAI = new GoogleGenerativeAI(API_KEY);
-            // Select the generative model. 'gemini-pro' is a general-purpose model.
-            // You might consider 'gemini-1.5-flash' for faster, cost-effective responses.
-            const model = genAI.getGenerativeModel({ model: "gemini-pro" }); 
-
-            // 5. Start Chat Session: Initialize a chat session with the provided history.
-            const chat = model.startChat({
-                history: chatHistory,
-                generationConfig: {
-                    maxOutputTokens: 500, // Limit the length of the bot's response
-                },
-            });
-
-            // 6. Get Last User Message: Extract the most recent user message from the history.
-            const lastUserMessage = chatHistory[chatHistory.length - 1].parts[0].text;
-
-            // 7. Send Message to Gemini: Send the user's message to the Gemini API.
-            const result = await chat.sendMessage(lastUserMessage);
-            const response = await result.response;
-            const text = response.text(); // Get the text content of the AI's response
-
-            // 8. Return Success Response: Send the AI's response back to the frontend.
-            return {
-                statusCode: 200, // OK
-                headers: {
-                    'Content-Type': 'application/json', // Indicate JSON response
-                },
-                body: JSON.stringify({ text: text }) // The AI's response
-            };
-
-        } catch (error) {
-            // 9. Handle Errors: Log and return an error response if something goes wrong.
-            console.error("Error communicating with Gemini API:", error);
-            return {
-                statusCode: 500, // Internal Server Error
-                body: JSON.stringify({ error: `Error processing request: ${error.message}` })
-            };
+        // Extrae la respuesta del bot.
+        // Asegúrate de que la estructura de la respuesta sea la esperada.
+        let botResponse = 'Lo siento, no pude generar una respuesta en este momento.';
+        if (result.candidates && result.candidates.length > 0 &&
+            result.candidates[0].content && result.candidates[0].content.parts &&
+            result.candidates[0].content.parts.length > 0) {
+            botResponse = result.candidates[0].content.parts[0].text;
         }
-    };
-    
+
+        // Devuelve la respuesta del bot al frontend.
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ response: botResponse }),
+        };
+
+    } catch (error) {
+        console.error('Error in Netlify Function:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Internal Server Error', details: error.message }),
+        };
+    }
+};

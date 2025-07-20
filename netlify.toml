@@ -1,8 +1,12 @@
 [build]
-  publish = "."
-  functions = "netlify/functions"
+  publish = "pagina web" # La carpeta donde se encuentra tu index.html y otros archivos estáticos
+  command = "echo 'Netlify build complete'" # Un comando de construcción simple, puedes ajustarlo si tienes un proceso de construcción más complejo
+
+[functions]
+  directory = "pagina web/netlify/functions" # La carpeta donde se encuentran tus funciones de Netlify
+  node_bundler = "esbuild" # Recomendado para un rendimiento más rápido
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200
