@@ -1,20 +1,8 @@
 {
-  "name": "pagina-web",
+  "name": "gemini-chat-function",
   "version": "1.0.0",
-  "description": "Sitio web de SENA CLOUD SERVICES con chatbot integrado",
-  "main": "index.html",
-  "scripts": {
-    "start": "netlify dev"
-  },
-  "keywords": [
-    "netlify",
-    "serverless",
-    "chatbot",
-    "gemini",
-    "web"
-  ],
-  "author": "Tu Nombre",
-  "license": "ISC",
+  "description": "Netlify function for Gemini chatbot",
+  "main": "gemini-chat.js",
   "dependencies": {
     "node-fetch": "^2.6.1"
   }
