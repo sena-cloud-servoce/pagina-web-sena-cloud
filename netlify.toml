@@ -1,6 +1,6 @@
 [build]
-  publish = "." # La carpeta donde se encuentra tu index.html y otros archivos estáticos (el punto significa la raíz del repositorio)
-  command = "npm install && npm install --prefix netlify/functions" # Instala las dependencias del proyecto principal y luego las de la función
+  publish = "." # La carpeta donde se encuentra tu index.html y otros archivos estáticos
+  command = "npm install && npm install --prefix netlify/functions" # Instala dependencias del proyecto y luego las de la función
 
 [functions]
   directory = "netlify/functions" # La carpeta donde se encuentran tus funciones de Netlify
@@ -8,5 +8,4 @@
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "/i
