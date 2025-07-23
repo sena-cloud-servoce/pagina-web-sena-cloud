@@ -4,7 +4,8 @@
   "description": "Sitio web de SENA CLOUD SERVICES con chatbot integrado",
   "main": "index.html",
   "scripts": {
-    "start": "netlify dev"
+    "start": "netlify dev",
+    "build": "npm install"
   },
   "keywords": [
     "netlify",

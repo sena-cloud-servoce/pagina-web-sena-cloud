@@ -23,6 +23,15 @@ exports.handler = async (event, context) => {
         // Se espera un 'chatHistory' opcional para mantener el contexto.
         const { prompt, chatHistory = [] } = JSON.parse(event.body);
 
+        // Verifica si la clave API está presente.
+        if (!GEMINI_API_KEY) {
+            console.error("GEMINI_API_KEY is not set in environment variables.");
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ error: 'Server configuration error: Gemini API key is missing.' }),
+            };
+        }
+
         if (!prompt) {
             return {
                 statusCode: 400,

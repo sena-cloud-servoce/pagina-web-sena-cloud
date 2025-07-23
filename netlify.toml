@@ -1,9 +1,9 @@
 [build]
-  publish = "pagina web" # La carpeta donde se encuentra tu index.html y otros archivos estáticos
-  command = "echo 'Netlify build complete'" # Un comando de construcción simple, puedes ajustarlo si tienes un proceso de construcción más complejo
+  publish = "." # La carpeta donde se encuentra tu index.html y otros archivos estáticos (el punto significa la raíz del repositorio)
+  command = "npm install && npm install --prefix netlify/functions" # Instala las dependencias del proyecto principal y luego las de la función
 
 [functions]
-  directory = "pagina web/netlify/functions" # La carpeta donde se encuentran tus funciones de Netlify
+  directory = "netlify/functions" # La carpeta donde se encuentran tus funciones de Netlify
   node_bundler = "esbuild" # Recomendado para un rendimiento más rápido
 
 [[redirects]]
