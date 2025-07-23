@@ -19,6 +19,8 @@
             --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.2);
             --shadow-medium: 0 8px 16px rgba(0, 0, 0, 0.3);
             --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4);
+
+            /* Eliminadas variables de altura fija, ya no son necesarias */
         }
 
         body {
@@ -27,42 +29,45 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-image: url('fondo.jpg'); /* Asegúrese de que 'fondo.jpg' esté en la misma carpeta */
+            background-image: url('fondo.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed; /* Mantiene la imagen de fondo fija */
             color: var(--text-color-light); /* Color de texto predeterminado para el body */
             text-align: center;
             line-height: 1.6;
-            padding-top: 0; /* No se necesita padding superior ya que los elementos no son fijos */
+            /* Eliminado padding superior, ya que los elementos superiores no son fijos */
+            padding-top: 0;
         }
 
-        /* Título principal ahora se desplaza con la página */
+        /* Estilo para el título principal, ahora se desplazará con el contenido */
         #top-fixed-title {
-            position: static; /* Se desplaza con la página */
+            position: static; /* Cambiado de 'fixed' a 'static' para que se desplace */
             width: 100%;
-            background-color: var(--dark-bg); /* Fondo oscuro semi-transparente para visibilidad */
+            background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente para legibilidad */
             color: var(--text-color-light);
             padding: 15px 0;
             text-align: center;
-            z-index: auto; /* No es fijo, no necesita z-index */
-            box-shadow: none; /* Sin sombra */
+            /* Eliminados z-index y box-shadow relacionados con 'fixed' */
+            z-index: auto;
+            box-shadow: none;
         }
 
         #top-fixed-title h1 {
-            font-size: 3em;
+            font-size: 3em; /* Tamaño de fuente original */
             margin: 0;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Sombra para mejor contraste */
             letter-spacing: 1px;
         }
 
         header {
-            background-color: var(--dark-bg); /* Fondo oscuro semi-transparente para visibilidad */
+            background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente para legibilidad */
             padding: 15px 0;
-            box-shadow: none; /* Sin sombra */
-            position: static; /* Se desplaza con la página */
+            /* Eliminados box-shadow, position, top, width, z-index relacionados con 'fixed' */
+            box-shadow: none;
+            position: static; /* Cambiado de 'fixed' a 'static' para que se desplace */
             width: 100%;
-            z-index: auto; /* No es fijo, no necesita z-index */
+            z-index: auto;
         }
 
         .header-content {
@@ -75,7 +80,7 @@
         }
 
         .logo {
-            max-width: 240px; /* Asegúrese de que 'logo.jpg' esté en la misma carpeta */
+            max-width: 240px;
             height: auto;
             border-radius: var(--border-radius-sm);
             box-shadow: var(--shadow-light);
@@ -96,7 +101,7 @@
             padding: 8px 15px;
             border-radius: var(--border-radius-sm);
             transition: background-color 0.3s ease, transform 0.2s ease;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); /* Añadida sombra para legibilidad */
         }
 
         nav a:hover {
@@ -123,11 +128,12 @@
             margin: 0;
         }
 
+        .hero-section h1 { display: none; } /* Mantenido para ocultar el h1 original del hero */
         .hero-section p {
             font-size: 1.5em;
             max-width: 800px;
             margin-bottom: 40px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6); /* Sombra para legibilidad */
         }
 
         .btn {
@@ -161,7 +167,7 @@
 
         section {
             padding: 60px 20px;
-            background-color: var(--dark-bg); /* Fondo oscuro para que las letras blancas se vean bien */
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro para que las letras blancas se vean bien */
             color: var(--text-color-light);
             margin: 0 auto 40px auto;
             width: 100%;
@@ -178,10 +184,6 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        section p {
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
         .section-content {
             display: flex;
             flex-wrap: wrap;
@@ -191,7 +193,7 @@
         }
 
         .card {
-            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente para tarjetas */
+            background-color: white; /* Fondo blanco para las tarjetas */
             border-radius: var(--border-radius-md);
             box-shadow: var(--shadow-light);
             padding: 25px;
@@ -227,19 +229,17 @@
             justify-content: center;
             width: 100%;
             box-sizing: border-box;
-            box-shadow: var(--shadow-medium);
         }
 
         footer p {
             margin-top: 20px;
             margin-bottom: 0;
             color: var(--text-color-light);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         /* Estilos para el chatbot */
         #chat-window-container {
-            position: fixed; /* Mantiene la ventana del chat flotante */
+            position: fixed;
             bottom: 20px;
             right: 20px;
             width: 300px;
@@ -359,7 +359,6 @@
             box-shadow: var(--shadow-strong);
             overflow: hidden;
             color: var(--text-color-dark);
-            position: relative;
             z-index: 1003;
             display: none;
             transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
@@ -391,7 +390,6 @@
             transition: background-color 0.3s ease;
             border-radius: var(--border-radius-md);
             margin: 10px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .accordion-header:hover {
@@ -428,7 +426,7 @@
 
         .accordion-content {
             padding: 20px;
-            background-color: var(--light-bg);
+            background-color: white;
             color: var(--text-color-dark);
             max-height: 0;
             overflow: hidden;
@@ -563,11 +561,11 @@
             color: #dc3545;
         }
 
-        /* Botón para abrir el chat - Posicionado al final de la página (estático) */
+        /* Botón flotante para abrir el chat */
         #open-chat-button {
-            position: static; /* Se desplaza con el contenido */
-            margin: 40px auto; /* Centrar y añadir margen */
-            display: block; /* Para que margin: auto funcione */
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             background-color: var(--primary-color);
             color: white;
             padding: 15px 25px;
@@ -577,6 +575,7 @@
             font-weight: 700;
             cursor: pointer;
             box-shadow: var(--shadow-medium);
+            z-index: 1005;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
@@ -588,7 +587,7 @@
 
         /* Estilo para las secciones que se verán como tarjetas */
         .card-like-section {
-            background-color: rgba(255, 255, 255, 0.8); /* Fondo claro semi-transparente para la tarjeta */
+            background-color: var(--light-bg); /* Fondo claro para la tarjeta */
             color: var(--text-color-dark); /* Texto oscuro para la tarjeta */
             box-shadow: var(--shadow-medium); /* Sombra para destacar la tarjeta */
             padding: 40px; /* Ajustar padding para el aspecto de tarjeta */
@@ -663,11 +662,15 @@
             .hidden-section {
                 padding: 20px;
             }
+            .card-like-section { /* Ajustes para móvil */
+                padding: 20px;
+                max-width: 90%; /* Ajustar para móviles */
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Título principal ahora se desplaza con la página -->
+    <!-- Título principal, ahora se desplaza con el contenido -->
     <div id="top-fixed-title">
         <h1>SENA CLOUD SERVICES</h1>
     </div>
@@ -680,7 +683,6 @@
                     <li><a href="#" data-accordion-target="quienes-somos-content">¿Quiénes somos?</a></li>
                     <li><a href="#" data-accordion-target="servicios-content">Nuestros servicios</a></li>
                     <li><a href="#" data-accordion-target="garantias-content">Nuestras garantías</a></li>
-                    <li><a href="#" data-accordion-target="tecnicos-section">Contactos</a></li> <!-- Nuevo enlace de navegación -->
                     <li><a href="#" class="btn" id="agende-cita-nav-btn">Agende su cita</a></li>
                 </ul>
             </nav>
@@ -689,6 +691,7 @@
 
     <main>
         <section class="hero-section">
+            <!-- El título principal y el párrafo se han movido a #top-fixed-title -->
             <p>Tu socio estratégico en soluciones tecnológicas en la nube. Innovación, seguridad y soporte personalizado para tu empresa.</p>
             <a href="#" class="btn" data-accordion-target="servicios-content">Descubre nuestros servicios</a>
         </section>
@@ -762,18 +765,18 @@
             </form>
         </section>
 
-        <section id="contacto">
+        <section id="contacto" class="card-like-section">
             <h2>Contáctanos</h2>
             <p>¿Listo para llevar tu negocio a la nube? Agenda una cita con nuestros expertos para una consulta personalizada.</p>
             <a href="#" class="btn" id="agendar-cita-contact-btn">Agendar Cita</a>
         </section>
 
-        <!-- SECCIÓN PARA TÉCNICOS (Contactos) -->
-        <section id="tecnicos-section" class="card-like-section" style="display: none;">
+        <!-- NUEVA SECCIÓN PARA TÉCNICOS -->
+        <section id="tecnicos-section" class="card-like-section">
             <h2>TECNICOS</h2>
             <p>Conoce a nuestro equipo de soporte técnico.</p>
             <button class="btn" id="tecnicos-button">Ver Contactos</button>
-            <ul id="tecnicos-contact-list" style="list-style: none; padding: 0; margin-top: 20px; text-align: center; color: var(--text-color-dark);">
+            <ul id="tecnicos-contact-list" style="list-style: none; padding: 0; margin-top: 20px; display: none; text-align: center; color: var(--text-color-dark);">
                 <li style="margin-bottom: 5px;">ALEX MUSK - <a href="mailto:A.Musk@proyecto.com" style="color: var(--primary-color); text-decoration: none;">A.Musk@proyecto.com</a></li>
                 <li style="margin-bottom: 5px;">JOSSIE ESTEBAN - <a href="mailto:J.Esteban@proyecto.com" style="color: var(--primary-color); text-decoration: none;">J.Esteban@proyecto.com</a></li>
                 <li style="margin-bottom: 5px;">JUAND DAVID - <a href="mailto:J.David@proyecto.com" style="color: var(--primary-color); text-decoration: none;">J.David@proyecto.com</a></li>
@@ -806,24 +809,111 @@
     </div>
 
     <script type="module">
-        // Firebase SDKs (Estos imports son necesarios si planeas usar Firebase para algo más, como guardar citas)
+        // Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOM Content Loaded: Script execution started."); // Mensaje para depuración
-
             const chatMessages = document.getElementById('chat-messages');
             const chatInput = document.getElementById('chat-input');
             const sendButton = document.getElementById('send-button');
 
-            // Elementos del chat
-            const openChatButton = document.getElementById('open-chat-button');
-            const chatWindowContainer = document.getElementById('chat-window-container');
-            const closeChatButton = chatWindowContainer ? chatWindowContainer.querySelector('.close-chat') : null;
+            const appendMessage = (sender, text) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add(sender === 'user' ? 'message-user' : 'message-bot');
+                const span = document.createElement('span');
+                span.textContent = text;
+                messageDiv.appendChild(span);
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+            };
 
-            // Elementos del acordeón y secciones
+            sendButton.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            async function sendMessage() {
+                const message = chatInput.value.trim();
+                if (message === '') return;
+
+                appendMessage('user', message);
+                chatInput.value = '';
+                sendButton.disabled = true; // Deshabilita el botón mientras espera respuesta
+
+                // Aquí es donde haremos la llamada a tu Netlify Function
+                try {
+                    const response = await fetch('/.netlify/functions/gemini-chat', { // Ruta a tu Netlify Function
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ prompt: message })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    appendMessage('bot', data.response); // La respuesta real del bot
+                } catch (error) {
+                    console.error('Error al comunicarse con el chatbot:', error);
+                    appendMessage('bot', 'Lo siento, hubo un error al procesar tu solicitud. Intenta de nuevo más tarde.');
+                } finally {
+                    sendButton.disabled = false; // Habilita el botón de nuevo
+                }
+            }
+
+            // Firebase setup
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+
+            let app;
+            let db;
+            let auth;
+            let currentUserId = 'anonymous'; // Default to anonymous
+
+            const initFirebase = async () => {
+                if (!app) {
+                    app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        try {
+                            const userCredential = await signInWithCustomToken(auth, __initial_auth_token);
+                            currentUserId = userCredential.user.uid;
+                            console.log("Signed in with custom token:", currentUserId);
+                        } catch (error) {
+                            console.error("Error signing in with custom token:", error);
+                            try {
+                                const userCredential = await signInAnonymously(auth);
+                                currentUserId = userCredential.user.uid;
+                                console.log("Signed in anonymously (fallback):", currentUserId);
+                            } catch (anonError) {
+                                console.error("Error signing in anonymously:", anonError);
+                            }
+                        }
+                    } else {
+                        try {
+                            const userCredential = await signInAnonymously(auth);
+                            currentUserId = userCredential.user.uid;
+                            console.log("Signed in anonymously:", currentUserId);
+                        } catch (error) {
+                            console.error("Error signing in anonymously:", error);
+                        }
+                    }
+                }
+            };
+
+            // Call initFirebase at the start of DOMContentLoaded
+            initFirebase();
+
+            // Lógica del Acordeón y Visibilidad de Secciones
             const accordionHeaders = document.querySelectorAll('.accordion-header');
             const navLinks = document.querySelectorAll('nav ul li a[data-accordion-target]');
             const heroSection = document.querySelector('.hero-section');
@@ -836,140 +926,16 @@
             const agendeSuCitaNavButton = document.getElementById('agende-cita-nav-btn');
             const agendarCitaContactButton = document.getElementById('agendar-cita-contact-btn');
 
-            // Elementos de la sección "TECNICOS"
-            const tecnicosSection = document.getElementById('tecnicos-section');
+            // Chatbot elements
+            const openChatButton = document.getElementById('open-chat-button');
+            const chatWindowContainer = document.getElementById('chat-window-container');
+            const closeChatButton = chatWindowContainer.querySelector('.close-chat');
+
+            // "TECNICOS" elements
             const tecnicosButton = document.getElementById('tecnicos-button');
             const tecnicosContactList = document.getElementById('tecnicos-contact-list');
 
 
-            // Función para añadir mensajes al chat
-            const appendMessage = (sender, text) => {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add(sender === 'user' ? 'message-user' : 'message-bot');
-                const span = document.createElement('span');
-                span.textContent = text;
-                messageDiv.appendChild(span);
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll al final
-            };
-
-            // Event listeners para el envío de mensajes del chat
-            if (sendButton) {
-                sendButton.addEventListener('click', sendMessage);
-            } else {
-                console.error("Send button not found for chat!");
-            }
-
-            if (chatInput) {
-                chatInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        sendMessage();
-                    }
-                });
-            } else {
-                console.error("Chat input not found!");
-            }
-
-
-            async function sendMessage() {
-                const message = chatInput.value.trim();
-                if (message === '') return;
-
-                appendMessage('user', message);
-                chatInput.value = '';
-                if (sendButton) sendButton.disabled = true; // Deshabilita el botón mientras espera respuesta
-
-                // Aquí es donde haremos la llamada a tu Netlify Function
-                try {
-                    console.log("Attempting to fetch from Netlify Function...");
-                    const response = await fetch('/.netlify/functions/gemini-chat', { // Ruta a tu Netlify Function
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ prompt: message })
-                    });
-
-                    if (!response.ok) {
-                        const errorBody = await response.text();
-                        console.error(`Error HTTP from Netlify Function: ${response.status} - ${errorBody}`);
-                        throw new Error(`Error HTTP: ${response.status} - ${errorBody}`);
-                    }
-
-                    const data = await response.json();
-                    console.log("Response from Netlify Function:", data);
-                    appendMessage('bot', data.response); // La respuesta real del bot
-                } catch (error) {
-                    console.error('Error al comunicarse con el chatbot:', error);
-                    appendMessage('bot', 'Lo siento, hubo un error al procesar tu solicitud. Intenta de nuevo más tarde.');
-                } finally {
-                    if (sendButton) sendButton.disabled = false; // Habilita el botón de nuevo
-                }
-            }
-
-            // Firebase setup (Necesario si quieres usar Firebase para algo más, como guardar citas)
-            // Asegúrate de que __firebase_config y __app_id estén definidos en Netlify Environment Variables
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            let firebaseConfig = {};
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                try {
-                    firebaseConfig = JSON.parse(__firebase_config);
-                } catch (e) {
-                    console.error("Error parsing __firebase_config. Firebase will not be initialized.", e);
-                    firebaseConfig = {}; // Asegura que sea un objeto vacío si falla el parseo
-                }
-            }
-
-            let app;
-            let db;
-            let auth;
-            let currentUserId = 'anonymous'; // Default to anonymous
-
-            const initFirebase = async () => {
-                // Solo inicializa Firebase si firebaseConfig no está vacío y la app no ha sido inicializada
-                if (Object.keys(firebaseConfig).length > 0 && !app) {
-                    try {
-                        app = initializeApp(firebaseConfig);
-                        db = getFirestore(app);
-                        auth = getAuth(app);
-                        console.log("Firebase initialized successfully.");
-
-                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                            try {
-                                const userCredential = await signInWithCustomToken(auth, __initial_auth_token);
-                                currentUserId = userCredential.user.uid;
-                                console.log("Signed in with custom token:", currentUserId);
-                            } catch (error) {
-                                console.error("Error signing in with custom token:", error);
-                                try {
-                                    const userCredential = await signInAnonymously(auth);
-                                    currentUserId = userCredential.user.uid;
-                                    console.log("Signed in anonymously (fallback):", currentUserId);
-                                } catch (anonError) {
-                                    console.error("Error signing in anonymously:", anonError);
-                                }
-                            }
-                        } else {
-                            try {
-                                const userCredential = await signInAnonymously(auth);
-                                currentUserId = userCredential.user.uid;
-                                console.log("Signed in anonymously:", currentUserId);
-                            } catch (error) {
-                                console.error("Error signing in anonymously:", error);
-                            }
-                        }
-                    } catch (firebaseInitError) {
-                        console.error("Critical error initializing Firebase app. Check your firebaseConfig.", firebaseInitError);
-                    }
-                } else {
-                    console.warn("Firebase not initialized: Configuration missing/empty or already initialized.");
-                }
-            };
-
-            // Call initFirebase at the start of DOMContentLoaded
-            initFirebase();
-
-            // Lógica para cerrar todas las secciones de contenido (acordeones y formularios)
             const closeAllContentSections = () => {
                 document.querySelectorAll('.accordion-item').forEach(item => {
                     item.classList.remove('active-item');
@@ -995,21 +961,14 @@
                     heroSection.classList.remove('hidden');
                 }
 
-                // Asegura que la sección TECNICOS esté oculta y su botón/lista reseteados
-                if (tecnicosSection) {
-                    tecnicosSection.style.display = 'none';
-                }
+                // Close TECNICOS dropdown if open
                 if (tecnicosContactList) {
                     tecnicosContactList.style.display = 'none';
                 }
-                if (tecnicosButton) {
-                    tecnicosButton.textContent = 'Ver Contactos';
-                }
             };
 
-            // Lógica para abrir una sección de contenido específica
             const openContentSection = (targetId) => {
-                closeAllContentSections(); // Cierra todo antes de abrir el nuevo
+                closeAllContentSections();
 
                 if (targetId === 'appointment-form-section') {
                     if (appointmentFormSection) {
@@ -1019,22 +978,7 @@
                         }
                         appointmentFormSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
-                } else if (targetId === 'tecnicos-section') {
-                    if (tecnicosSection) {
-                        tecnicosSection.style.display = 'block';
-                        if (heroSection) {
-                            heroSection.classList.add('hidden');
-                        }
-                        if (tecnicosContactList) {
-                            tecnicosContactList.style.display = 'block'; // Asegura que la lista se muestre al abrir la sección
-                        }
-                        if (tecnicosButton) {
-                            tecnicosButton.textContent = 'Ocultar Contactos';
-                        }
-                        tecnicosSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }
-                else {
+                } else {
                     const targetContent = document.getElementById(targetId);
                     const targetHeader = document.querySelector(`.accordion-header[data-accordion-id="${targetId}"]`);
                     const targetItem = targetContent ? targetContent.closest('.accordion-item') : null;
@@ -1056,7 +1000,6 @@
                 }
             };
 
-            // Event listeners para los encabezados del acordeón
             accordionHeaders.forEach(header => {
                 const closeButton = header.querySelector('.close-accordion');
 
@@ -1118,48 +1061,35 @@
                 });
             }
 
-            // Lógica de visibilidad del chatbot
             if (openChatButton && chatWindowContainer && closeChatButton) {
-                console.log("Chat elements found. Setting up listeners.");
                 openChatButton.addEventListener('click', () => {
-                    console.log("Open Chat Button clicked!");
                     chatWindowContainer.classList.add('show');
-                    openChatButton.style.display = 'none'; // Oculta el botón de abrir
+                    openChatButton.style.display = 'none';
                 });
 
                 closeChatButton.addEventListener('click', () => {
-                    console.log("Close Chat Button clicked!");
                     chatWindowContainer.classList.remove('show');
-                    openChatButton.style.display = 'block'; // Muestra el botón de abrir
+                    openChatButton.style.display = 'block';
                 });
-            } else {
-                console.error("One or more chat elements (openChatButton, chatWindowContainer, closeChatButton) not found. Chat functionality may not work.");
             }
 
-            // Toggle para el botón "TECNICOS"
+            // Toggle for "TECNICOS" button
             if (tecnicosButton && tecnicosContactList) {
                 tecnicosButton.addEventListener('click', () => {
-                    console.log("TECNICOS button clicked!");
                     if (tecnicosContactList.style.display === 'none' || tecnicosContactList.style.display === '') {
                         tecnicosContactList.style.display = 'block';
-                        tecnicosButton.textContent = 'Ocultar Contactos';
+                        tecnicosButton.textContent = 'Ocultar Contactos'; // Cambiar texto del botón
                     } else {
                         tecnicosContactList.style.display = 'none';
-                        tecnicosButton.textContent = 'Ver Contactos';
+                        tecnicosButton.textContent = 'Ver Contactos'; // Volver al texto original
                     }
                 });
-            } else {
-                console.warn("TECNICOS button or contact list not found.");
             }
 
-            // Cerrar el menú de contactos si se hace clic fuera
+            // Close TECNICOS dropdown if clicked outside
             document.addEventListener('click', (e) => {
-                const isClickInsideTecnicosSection = tecnicosSection && tecnicosSection.contains(e.target);
-                const isClickInsideChatButton = openChatButton && openChatButton.contains(e.target);
-                const isClickInsideChatWindow = chatWindowContainer && chatWindowContainer.contains(e.target);
-
-                if (tecnicosContactList && tecnicosContactList.style.display === 'block' &&
-                    !isClickInsideTecnicosSection && !isClickInsideChatButton && !isClickInsideChatWindow) {
+                const isClickInsideTecnicosSection = document.getElementById('tecnicos-section') && document.getElementById('tecnicos-section').contains(e.target);
+                if (tecnicosContactList && tecnicosContactList.style.display === 'block' && !isClickInsideTecnicosSection) {
                     tecnicosContactList.style.display = 'none';
                     if (tecnicosButton) {
                         tecnicosButton.textContent = 'Ver Contactos';
@@ -1167,12 +1097,10 @@
                 }
             });
 
-            // Establecer el estado inicial al cargar la página
+
             closeAllContentSections();
-            // Asegurarse de que el botón de chat esté visible al inicio
             if (openChatButton) {
                 openChatButton.style.display = 'block';
-                console.log("Open Chat Button set to display: block at startup.");
             }
         });
     </script>
