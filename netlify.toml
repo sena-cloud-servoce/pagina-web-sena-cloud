@@ -8,4 +8,5 @@
 
 [[redirects]]
   from = "/*"
-  to = "/i
+  to = "/index.html"
+  status = 200
