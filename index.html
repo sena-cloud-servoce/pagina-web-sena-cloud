@@ -20,9 +20,7 @@
             --shadow-medium: 0 8px 16px rgba(0, 0, 0, 0.3);
             --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4);
 
-            /* Nuevas variables para alturas fijas */
-            --top-title-height: 80px; /* Altura estimada para el título principal fijo */
-            --header-height: 80px; /* Altura estimada para la barra de navegación fija */
+            /* Eliminadas variables de altura fija, ya no son necesarias */
         }
 
         body {
@@ -34,43 +32,42 @@
             background-image: url('fondo.jpg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
+            background-attachment: fixed; /* Mantiene la imagen de fondo fija */
             color: var(--text-color-light); /* Color de texto predeterminado para el body */
             text-align: center;
             line-height: 1.6;
-            /* Añadir padding superior para que el contenido no quede debajo de los elementos fijos */
-            padding-top: calc(var(--top-title-height) + var(--header-height));
+            /* Eliminado padding superior, ya que los elementos superiores no son fijos */
+            padding-top: 0;
         }
 
-        /* Nuevo estilo para el título principal fijo en la parte superior */
+        /* Estilo para el título principal, ahora se desplazará con el contenido */
         #top-fixed-title {
-            position: fixed;
-            top: 0;
-            left: 0;
+            position: static; /* Cambiado de 'fixed' a 'static' para que se desplace */
             width: 100%;
-            background-color: var(--dark-bg); /* Fondo oscuro */
+            background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente para legibilidad */
             color: var(--text-color-light);
-            padding: 15px 0; /* Ajustar padding para controlar la altura */
+            padding: 15px 0;
             text-align: center;
-            z-index: 1002; /* El z-index más alto para estar encima de todo */
-            box-shadow: var(--shadow-medium);
+            /* Eliminados z-index y box-shadow relacionados con 'fixed' */
+            z-index: auto;
+            box-shadow: none;
         }
 
         #top-fixed-title h1 {
-            font-size: 3em; /* Tamaño de fuente ajustado para la barra superior */
-            margin: 0; /* Eliminar margen predeterminado */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            font-size: 3em; /* Tamaño de fuente original */
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Sombra para mejor contraste */
             letter-spacing: 1px;
         }
 
         header {
-            background-color: var(--dark-bg);
+            background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente para legibilidad */
             padding: 15px 0;
-            box-shadow: var(--shadow-medium);
-            position: fixed; /* Mantener fijo */
-            top: var(--top-title-height); /* Posicionar debajo del título principal fijo */
-            width: 100%; /* Asegurar que ocupe todo el ancho */
-            z-index: 1001; /* Debajo del título principal, encima del resto del contenido */
+            /* Eliminados box-shadow, position, top, width, z-index relacionados con 'fixed' */
+            box-shadow: none;
+            position: static; /* Cambiado de 'fixed' a 'static' para que se desplace */
+            width: 100%;
+            z-index: auto;
         }
 
         .header-content {
@@ -83,7 +80,7 @@
         }
 
         .logo {
-            max-width: 240px; /* Doble del tamaño original (120px * 2) */
+            max-width: 240px;
             height: auto;
             border-radius: var(--border-radius-sm);
             box-shadow: var(--shadow-light);
@@ -104,6 +101,7 @@
             padding: 8px 15px;
             border-radius: var(--border-radius-sm);
             transition: background-color 0.3s ease, transform 0.2s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); /* Añadida sombra para legibilidad */
         }
 
         nav a:hover {
@@ -113,7 +111,7 @@
 
         .hero-section {
             padding: 80px 20px;
-            background-color: rgba(0, 0, 0, 0.4); /* Más transparente para ver el fondo */
+            background-color: transparent; /* Fondo transparente para ver el fondo */
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -125,18 +123,17 @@
         .hero-section.hidden {
             opacity: 0;
             visibility: hidden;
-            height: 0; /* Colapsar el espacio */
-            padding: 0; /* Eliminar padding */
-            margin: 0; /* Eliminar margen */
+            height: 0;
+            padding: 0;
+            margin: 0;
         }
 
-        /* Eliminar estilos de h1 y p del hero-section, ya que ahora están en top-fixed-title */
-        .hero-section h1 { display: none; }
+        .hero-section h1 { display: none; } /* Mantenido para ocultar el h1 original del hero */
         .hero-section p {
             font-size: 1.5em;
             max-width: 800px;
             margin-bottom: 40px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6); /* Sombra para legibilidad */
         }
 
         .btn {
@@ -150,7 +147,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
-            text-decoration: none; /* Para usar con <a> */
+            text-decoration: none;
             display: inline-block;
         }
 
@@ -160,30 +157,29 @@
             box-shadow: 0 8px 20px rgba(0, 123, 255, 0.6);
         }
 
-        /* El main ahora contendrá directamente el acordeón y la sección de contacto */
         main {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px; /* Padding general para el main */
+            padding: 20px;
         }
 
         section {
             padding: 60px 20px;
             background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro para que las letras blancas se vean bien */
-            color: var(--text-color-light); /* Letras blancas */
-            margin: 0 auto 40px auto; /* Centrar y dar margen inferior */
+            color: var(--text-color-light);
+            margin: 0 auto 40px auto;
             width: 100%;
             box-shadow: var(--shadow-strong);
             border-radius: var(--border-radius-md);
             max-width: 1200px;
-            box-sizing: border-box; /* Incluir padding en el ancho */
+            box-sizing: border-box;
         }
 
         section h2 {
             font-size: 2.8em;
-            color: var(--text-color-light); /* Letras blancas para los títulos de sección */
+            color: var(--text-color-light);
             margin-bottom: 30px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
@@ -206,7 +202,7 @@
             max-width: 350px;
             text-align: left;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            color: var(--text-color-dark); /* Texto oscuro para las tarjetas (para contraste) */
+            color: var(--text-color-dark);
         }
 
         .card:hover {
@@ -215,7 +211,7 @@
         }
 
         .card h3 {
-            color: var(--primary-color); /* Título de tarjeta en azul */
+            color: var(--primary-color);
             font-size: 1.8em;
             margin-bottom: 15px;
         }
@@ -226,7 +222,7 @@
             font-size: 0.9em;
             border-top-left-radius: var(--border-radius-md);
             border-top-right-radius: var(--border-radius-md);
-            margin-top: auto; /* Empuja el footer al final */
+            margin-top: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -246,7 +242,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 300px; /* Aproximadamente 10cm es ~378px, ajustado para usabilidad */
+            width: 300px;
             height: 400px;
             background-color: var(--light-bg);
             border-radius: var(--border-radius-md);
@@ -255,17 +251,17 @@
             flex-direction: column;
             overflow: hidden;
             color: var(--text-color-dark);
-            z-index: 1004; /* Por encima de la mayoría de los elementos */
+            z-index: 1004;
             transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            transform: translateY(100%); /* Oculto inicialmente abajo */
+            transform: translateY(100%);
             opacity: 0;
-            pointer-events: none; /* No interactuable cuando está oculto */
+            pointer-events: none;
         }
 
         #chat-window-container.show {
-            transform: translateY(0); /* Muestra la ventana */
+            transform: translateY(0);
             opacity: 1;
-            pointer-events: auto; /* Habilita la interacción */
+            pointer-events: auto;
         }
 
         .chat-header {
@@ -341,7 +337,7 @@
             border-radius: 15px;
             display: inline-block;
             max-width: 75%;
-            color: var(--text-color-dark); /* Texto oscuro en burbuja de usuario */
+            color: var(--text-color-dark);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         .message-bot span {
@@ -350,7 +346,7 @@
             border-radius: 15px;
             display: inline-block;
             max-width: 75%;
-            color: var(--text-color-dark); /* Texto oscuro en burbuja de bot */
+            color: var(--text-color-dark);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
@@ -362,23 +358,22 @@
             border-radius: var(--border-radius-md);
             box-shadow: var(--shadow-strong);
             overflow: hidden;
-            color: var(--text-color-dark); /* Texto oscuro por defecto en el acordeón */
-            position: relative;
-            z-index: 1003; /* Aumentar el z-index para que esté por encima de los elementos fijos */
-            display: none; /* Ocultar el contenedor del acordeón por defecto */
+            color: var(--text-color-dark);
+            z-index: 1003;
+            display: none;
             transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
         }
 
         .accordion-item {
             border-bottom: 1px solid #eee;
-            display: none; /* Ocultar todos los items del acordeón por defecto */
+            display: none;
         }
 
         .accordion-item:last-child {
             border-bottom: none;
         }
 
-        .accordion-item.active-item { /* Clase para mostrar el item activo */
+        .accordion-item.active-item {
             display: block;
         }
 
@@ -393,8 +388,8 @@
             justify-content: space-between;
             align-items: center;
             transition: background-color 0.3s ease;
-            border-radius: var(--border-radius-md); /* Bordes redondeados */
-            margin: 10px; /* Margen para separar los headers */
+            border-radius: var(--border-radius-md);
+            margin: 10px;
         }
 
         .accordion-header:hover {
@@ -412,7 +407,7 @@
         }
 
         .accordion-header.active .arrow-icon {
-            transform: rotate(90deg); /* Gira el icono de flecha */
+            transform: rotate(90deg);
         }
 
         .accordion-header .close-accordion {
@@ -422,37 +417,37 @@
             padding: 5px 10px;
             border-radius: 50%;
             transition: background-color 0.3s ease;
-            color: white; /* Color de la X */
+            color: white;
         }
 
         .accordion-header .close-accordion:hover {
-            background-color: rgba(255, 255, 255, 0.3); /* Fondo al pasar el ratón por la X */
+            background-color: rgba(255, 255, 255, 0.3);
         }
 
         .accordion-content {
             padding: 20px;
-            background-color: white; /* Fondo blanco para el contenido */
-            color: var(--text-color-dark); /* Texto negro para el contenido */
+            background-color: white;
+            color: var(--text-color-dark);
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease-out, padding 0.5s ease-out;
             text-align: left;
             border-bottom-left-radius: var(--border-radius-md);
             border-bottom-right-radius: var(--border-radius-md);
-            margin: 0 10px 10px 10px; /* Margen para que coincida con el header */
+            margin: 0 10px 10px 10px;
+            box-shadow: var(--shadow-light);
         }
 
         .accordion-content.show {
-            max-height: 500px; /* Suficiente altura para el contenido */
+            max-height: 500px;
             padding: 20px;
-            box-shadow: var(--shadow-light); /* Añadir sombra para destacar el contenido abierto */
         }
 
         /* Styles for the appointment form section */
         .hidden-section {
-            display: none; /* Hidden by default */
-            background-color: var(--light-bg); /* White background */
-            color: var(--text-color-dark); /* Black text */
+            display: none;
+            background-color: var(--light-bg);
+            color: var(--text-color-dark);
             padding: 40px;
             border-radius: var(--border-radius-md);
             box-shadow: var(--shadow-strong);
@@ -460,15 +455,15 @@
             max-width: 700px;
             margin: 40px auto;
             text-align: left;
-            box-sizing: border-box; /* Ensure padding is included in width */
+            box-sizing: border-box;
         }
 
         .hidden-section h2 {
-            color: var(--primary-color); /* Title color */
+            color: var(--primary-color);
             text-align: center;
             margin-bottom: 30px;
             font-size: 2.5em;
-            text-shadow: none; /* Remove text shadow for this section */
+            text-shadow: none;
         }
 
         .form-layout {
@@ -496,7 +491,7 @@
             border-radius: var(--border-radius-sm);
             font-size: 1em;
             width: 100%;
-            box-sizing: border-box; /* Ensure padding is included in width */
+            box-sizing: border-box;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -533,7 +528,7 @@
         }
 
         .secondary-btn {
-            background-color: #6c757d; /* Gris para el botón de cerrar */
+            background-color: #6c757d;
             color: white;
             padding: 12px 25px;
             border: none;
@@ -555,15 +550,15 @@
             text-align: center;
             margin-top: 20px;
             font-weight: 600;
-            color: var(--primary-color); /* Default color for messages */
+            color: var(--primary-color);
         }
 
         .form-status-message.success {
-            color: var(--secondary-color); /* Green for success */
+            color: var(--secondary-color);
         }
 
         .form-status-message.error {
-            color: #dc3545; /* Red for error */
+            color: #dc3545;
         }
 
         /* Botón flotante para abrir el chat */
@@ -580,7 +575,7 @@
             font-weight: 700;
             cursor: pointer;
             box-shadow: var(--shadow-medium);
-            z-index: 1005; /* Asegura que esté por encima de todo */
+            z-index: 1005;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
@@ -588,6 +583,35 @@
             background-color: #0056b3;
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 123, 255, 0.6);
+        }
+
+        /* Estilo para las secciones que se verán como tarjetas */
+        .card-like-section {
+            background-color: var(--light-bg); /* Fondo claro para la tarjeta */
+            color: var(--text-color-dark); /* Texto oscuro para la tarjeta */
+            box-shadow: var(--shadow-medium); /* Sombra para destacar la tarjeta */
+            padding: 40px; /* Ajustar padding para el aspecto de tarjeta */
+            border-radius: var(--border-radius-md); /* Bordes redondeados */
+            margin: 40px auto; /* Centrar y añadir margen */
+            max-width: 350px; /* Tamaño similar a las cards existentes */
+            text-align: center; /* Centrar texto */
+            box-sizing: border-box;
+        }
+        .card-like-section h2 {
+            color: var(--primary-color); /* Título de la tarjeta en azul */
+            text-align: center; /* Centrar el título */
+            margin-bottom: 20px; /* Ajustar margen */
+            font-size: 1.8em; /* Ajustar tamaño de fuente para tarjeta pequeña */
+            text-shadow: none; /* Eliminar sombra de texto para el título de la tarjeta */
+        }
+        .card-like-section p {
+            color: var(--text-color-dark); /* Texto de la tarjeta en oscuro */
+            text-shadow: none; /* Eliminar sombra de texto para el texto de la tarjeta */
+            margin-bottom: 20px; /* Ajustar margen */
+            font-size: 1em;
+        }
+        .card-like-section .btn {
+            margin-top: 0; /* Ajustar margen para el botón dentro de la tarjeta */
         }
 
 
@@ -601,8 +625,8 @@
                 flex-direction: column;
                 gap: 10px;
             }
-            .hero-section h1 {
-                font-size: 3em;
+            #top-fixed-title h1 {
+                font-size: 2.5em;
             }
             .hero-section p {
                 font-size: 1.2em;
@@ -623,9 +647,9 @@
                 max-width: 100%;
             }
             #chat-window-container {
-                width: 90%; /* Ajustar para pantallas pequeñas */
-                max-width: 300px; /* Limitar el ancho máximo */
-                right: 5%; /* Ajustar posición */
+                width: 90%;
+                max-width: 300px;
+                right: 5%;
                 left: auto;
             }
             .accordion-header {
@@ -638,11 +662,15 @@
             .hidden-section {
                 padding: 20px;
             }
+            .card-like-section { /* Ajustes para móvil */
+                padding: 20px;
+                max-width: 90%; /* Ajustar para móviles */
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Nuevo elemento fijo para el título principal -->
+    <!-- Título principal, ahora se desplaza con el contenido -->
     <div id="top-fixed-title">
         <h1>SENA CLOUD SERVICES</h1>
     </div>
@@ -737,10 +765,24 @@
             </form>
         </section>
 
-        <section id="contacto">
+        <section id="contacto" class="card-like-section">
             <h2>Contáctanos</h2>
             <p>¿Listo para llevar tu negocio a la nube? Agenda una cita con nuestros expertos para una consulta personalizada.</p>
             <a href="#" class="btn" id="agendar-cita-contact-btn">Agendar Cita</a>
+        </section>
+
+        <!-- NUEVA SECCIÓN PARA TÉCNICOS -->
+        <section id="tecnicos-section" class="card-like-section">
+            <h2>TECNICOS</h2>
+            <p>Conoce a nuestro equipo de soporte técnico.</p>
+            <button class="btn" id="tecnicos-button">Ver Contactos</button>
+            <ul id="tecnicos-contact-list" style="list-style: none; padding: 0; margin-top: 20px; display: none; text-align: center; color: var(--text-color-dark);">
+                <li style="margin-bottom: 5px;">ALEX MUSK - <a href="mailto:A.Musk@proyecto.com" style="color: var(--primary-color); text-decoration: none;">A.Musk@proyecto.com</a></li>
+                <li style="margin-bottom: 5px;">JOSSIE ESTEBAN - <a href="mailto:J.Esteban@proyecto.com" style="color: var(--primary-color); text-decoration: none;">J.Esteban@proyecto.com</a></li>
+                <li style="margin-bottom: 5px;">JUAND DAVID - <a href="mailto:J.David@proyecto.com" style="color: var(--primary-color); text-decoration: none;">J.David@proyecto.com</a></li>
+                <li style="margin-bottom: 5px;">SAMUEL ROBERTO - <a href="mailto:S.Roberto@proyecto.com" style="color: var(--primary-color); text-decoration: none;">S.Roberto@proyecto.com</a></li>
+                <li style="margin-bottom: 5px;">DANILO RUIZ - <a href="mailto:D.Ruiz@proyecto.com" style="color: var(--primary-color); text-decoration: none;">D.Ruiz@proyecto.com</a></li>
+            </ul>
         </section>
     </main>
 
@@ -882,16 +924,19 @@
             const closeAppointmentFormButton = document.getElementById('close-appointment-form');
             const formMessage = document.getElementById('form-message');
             const agendeSuCitaNavButton = document.getElementById('agende-cita-nav-btn');
-            const agendarCitaContactButton = document.getElementById('agendar-cita-contact-btn'); // Nuevo botón de contacto
+            const agendarCitaContactButton = document.getElementById('agendar-cita-contact-btn');
 
             // Chatbot elements
             const openChatButton = document.getElementById('open-chat-button');
             const chatWindowContainer = document.getElementById('chat-window-container');
             const closeChatButton = chatWindowContainer.querySelector('.close-chat');
 
+            // "TECNICOS" elements
+            const tecnicosButton = document.getElementById('tecnicos-button');
+            const tecnicosContactList = document.getElementById('tecnicos-contact-list');
+
 
             const closeAllContentSections = () => {
-                // Oculta todos los ítems del acordeón
                 document.querySelectorAll('.accordion-item').forEach(item => {
                     item.classList.remove('active-item');
                 });
@@ -903,28 +948,29 @@
                     header.classList.remove('active');
                 });
 
-                // Oculta el contenedor principal del acordeón
                 if (accordionContainer) {
                     accordionContainer.style.display = 'none';
                 }
-                // Oculta el formulario de cita
                 if (appointmentFormSection) {
                     appointmentFormSection.style.display = 'none';
-                    appointmentForm.reset(); // Reinicia el formulario
-                    formMessage.textContent = ''; // Limpia mensajes del formulario
+                    appointmentForm.reset();
+                    formMessage.textContent = '';
                 }
 
-                // Muestra la sección hero
                 if (heroSection) {
                     heroSection.classList.remove('hidden');
+                }
+
+                // Close TECNICOS dropdown if open
+                if (tecnicosContactList) {
+                    tecnicosContactList.style.display = 'none';
                 }
             };
 
             const openContentSection = (targetId) => {
-                closeAllContentSections(); // Cierra todo antes de abrir el nuevo
+                closeAllContentSections();
 
                 if (targetId === 'appointment-form-section') {
-                    // Abrir el formulario de cita
                     if (appointmentFormSection) {
                         appointmentFormSection.style.display = 'block';
                         if (heroSection) {
@@ -933,7 +979,6 @@
                         appointmentFormSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                 } else {
-                    // Abrir un ítem del acordeón
                     const targetContent = document.getElementById(targetId);
                     const targetHeader = document.querySelector(`.accordion-header[data-accordion-id="${targetId}"]`);
                     const targetItem = targetContent ? targetContent.closest('.accordion-item') : null;
@@ -955,11 +1000,9 @@
                 }
             };
 
-            // Event listeners para los encabezados del acordeón
             accordionHeaders.forEach(header => {
                 const closeButton = header.querySelector('.close-accordion');
 
-                // Listener para el clic en el encabezado (excluyendo el botón de cerrar)
                 header.addEventListener('click', (e) => {
                     if (e.target !== closeButton) {
                         const targetId = header.dataset.accordionId;
@@ -974,7 +1017,6 @@
                     }
                 });
 
-                // Listener para el clic en el botón de cerrar (la 'x')
                 if (closeButton) {
                     closeButton.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -983,7 +1025,6 @@
                 }
             });
 
-            // Event listeners para los enlaces de navegación
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     if (link.dataset.accordionTarget) {
@@ -993,7 +1034,6 @@
                 });
             });
 
-            // Event listener para el botón "Descubre nuestros servicios" en la sección hero
             if (heroDiscoverButton) {
                 heroDiscoverButton.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1001,7 +1041,6 @@
                 });
             }
 
-            // Event listener para el botón "Agende su cita" en la navegación
             if (agendeSuCitaNavButton) {
                 agendeSuCitaNavButton.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1009,7 +1048,6 @@
                 });
             }
 
-            // Listener para el botón "Agendar Cita" en la sección de contacto
             if (agendarCitaContactButton) {
                 agendarCitaContactButton.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1017,29 +1055,50 @@
                 });
             }
 
-            // Listener para el botón "Cerrar" del formulario de cita
             if (closeAppointmentFormButton) {
                 closeAppointmentFormButton.addEventListener('click', () => {
                     closeAllContentSections();
                 });
             }
 
-            // Chatbot visibility logic
             if (openChatButton && chatWindowContainer && closeChatButton) {
                 openChatButton.addEventListener('click', () => {
                     chatWindowContainer.classList.add('show');
-                    openChatButton.style.display = 'none'; // Hide the open button
+                    openChatButton.style.display = 'none';
                 });
 
                 closeChatButton.addEventListener('click', () => {
                     chatWindowContainer.classList.remove('show');
-                    openChatButton.style.display = 'block'; // Show the open button
+                    openChatButton.style.display = 'block';
                 });
             }
 
-            // Establecer el estado inicial al cargar la página
+            // Toggle for "TECNICOS" button
+            if (tecnicosButton && tecnicosContactList) {
+                tecnicosButton.addEventListener('click', () => {
+                    if (tecnicosContactList.style.display === 'none' || tecnicosContactList.style.display === '') {
+                        tecnicosContactList.style.display = 'block';
+                        tecnicosButton.textContent = 'Ocultar Contactos'; // Cambiar texto del botón
+                    } else {
+                        tecnicosContactList.style.display = 'none';
+                        tecnicosButton.textContent = 'Ver Contactos'; // Volver al texto original
+                    }
+                });
+            }
+
+            // Close TECNICOS dropdown if clicked outside
+            document.addEventListener('click', (e) => {
+                const isClickInsideTecnicosSection = document.getElementById('tecnicos-section') && document.getElementById('tecnicos-section').contains(e.target);
+                if (tecnicosContactList && tecnicosContactList.style.display === 'block' && !isClickInsideTecnicosSection) {
+                    tecnicosContactList.style.display = 'none';
+                    if (tecnicosButton) {
+                        tecnicosButton.textContent = 'Ver Contactos';
+                    }
+                }
+            });
+
+
             closeAllContentSections();
-            // Asegurarse de que el botón de chat esté visible al inicio
             if (openChatButton) {
                 openChatButton.style.display = 'block';
             }
